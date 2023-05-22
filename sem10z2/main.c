@@ -45,7 +45,7 @@ void deleteItem(HashItem *table[], const char *key) {
     while (*link) {
         HashItem *tmp = *link;
         if (strcmp(tmp->key, key) == 0) {
-            *link = tmp->next;  // unlink the list node
+            *link = tmp->next;  
             freeItem(tmp);
             break;
         } else {
