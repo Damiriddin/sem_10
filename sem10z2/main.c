@@ -3,14 +3,15 @@
 #include <string.h>
 #include <unistd.h>
 
-#define MAX_HASH  10000
-
+#define MAX_HASH  10000  // задаем размер хэш таблицы
+// структура хэш элемента 
 typedef struct HashItem {
     char *key;
     int value;
     struct HashItem *next;
 } HashItem;
 
+// хэш функция
 unsigned int hashCode(const char *key) {
     unsigned int sum = 0;
 
@@ -19,7 +20,7 @@ unsigned int hashCode(const char *key) {
     }
     return sum % MAX_HASH;
 }
-
+// очистка памяти
 void freeItem(HashItem *item) {
     free(item->key);
     free(item);
@@ -38,7 +39,7 @@ HashItem * getItem(HashItem *table[], const char *key) {
     }
     return NULL;
 }
-
+// удаление города 
 void deleteItem(HashItem *table[], const char *key) {
     HashItem **link = &table[hashCode(key)];
 
@@ -53,7 +54,7 @@ void deleteItem(HashItem *table[], const char *key) {
         }
     }
 }
-
+// функция добавления города
 void insertItem(HashItem *table[], const char *key, const int value) {
     HashItem *item = getItem(table, key);
 
@@ -71,7 +72,7 @@ void insertItem(HashItem *table[], const char *key, const int value) {
         item->value = value;
     }
 }
-
+// печать хэш таблицы
 void displayHashTable(HashItem *table[]) {
     for (int i = 0; i < MAX_HASH; i++) {
         for (HashItem *tmp = table[i]; tmp; tmp = tmp->next) {
