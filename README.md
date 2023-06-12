@@ -9,6 +9,3 @@
 # каманды компиляции и запуска программы задача 2:
 # gcc main.c -o main.exe
 # .\main.exe file.txt
-# .\main.exe -o DESC file.txt 
-#
-# return true;
