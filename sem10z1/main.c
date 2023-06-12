@@ -37,12 +37,13 @@ char * read_string(FILE * file) {
         }
     }
 }
+ 
 
 tree * find_branch(char * word, tree * root) {
     if (root == NULL) return NULL;
     tree * found;
     int difference = strcmp(word, root -> word);
-    //printf("!!%s\n",root->word);
+
     if (difference > 0) {
         if (root -> right != NULL)
             return find_branch(word, root -> right);
@@ -56,6 +57,7 @@ tree * find_branch(char * word, tree * root) {
     } else
         return root;
 }
+
 
 tree * construct_leaf(char * word) {
     tree * leaf = (tree * ) malloc(sizeof(tree));
@@ -77,6 +79,7 @@ void add_leaf(char * word, tree * root, tree * leaf) {
         (found_branch -> count) ++;
     }
 }
+
 
 void delete_tree(tree * root) {
     if (root == NULL) return;
@@ -100,15 +103,60 @@ void print_tree_lower(tree * root) {
 }
 
 int main(int argc, char ** argv) {
-    if (argc < 2) return 0;
-    FILE * file = fopen(argv[3], "r");
+
     char * string;
+    FILE * file;
     int n = 1;
+    tree * root;
+    // проверка количества аргументов камандной строки
+    if (argc < 2){
+        puts("Incorect number of arguments\n\
+        Exemple: .\\main.exe file.txt");
+        exit(1);
+    }  
+
+    //  когда аргемнтов 2 то есть задана каманда .\main.exe file.txt
+    if (argc == 2){
+       
+        file = fopen(argv[1], "r");
+        // проверка на открытие файла
+        if (file == NULL){
+            puts("Error: invalid openning file.\n\
+            Exemple: .\\main.exe file.txt ");
+            exit(1);
+        }
+        if ((string = read_string(file)) != NULL) {
+        tree * root = construct_leaf(string);
+        while ((string = read_string(file)) != NULL) {
+            tree * new_leaf = construct_leaf(string);
+            add_leaf(string, root, new_leaf);
+        }
+        print_tree_upper(root); // вывод по умолчанию
+        exit(0);
+    }
+    }
+
+    if (argc != 4){
+        puts("Error: Incorect number of arguments.");
+        puts("Exemple: .\\main.exe -o DESC file.txt");
+        exit(1);
+    }
+if ((strcmp(argv[1],"-o") != 0 && strcmp(argv[2],"DESC") != 0) || (strcmp(argv[1],"-o") != 0 && strcmp(argv[2],"ASC") != 0)){
+    puts("Incorrect input of options\n\
+    Exemple: .\\main.exe -o DESC file.txt");
+    exit(1);
+}
+    file = fopen(argv[3], "r");
+    if (file == NULL){
+        puts("Error: opennig file.");
+        exit(1);
+    }
+
     for (int i = 1; i <= argc - 2; i++) {
         if (!strcmp(argv[i], "-o")) n = strcmp(argv[i + 1], "DESC");
     }
     if ((string = read_string(file)) != NULL) {
-        tree * root = construct_leaf(string);
+        root = construct_leaf(string);
         while ((string = read_string(file)) != NULL) {
             tree * new_leaf = construct_leaf(string);
             add_leaf(string, root, new_leaf);
@@ -122,3 +170,4 @@ int main(int argc, char ** argv) {
     fclose(file);
     return 0;
 }
+
